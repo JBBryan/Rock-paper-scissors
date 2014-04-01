@@ -1,6 +1,8 @@
 module RPS
   class Database
 
+    attr_reader :users, :matches, :games, :invites
+    
     def initialize
       @users = {}
       @matches = {}
