@@ -4,7 +4,7 @@ module RPS
 
   describe "Database" do
     before do
-      @db = RPS.db
+      @db = Database.new
     end
 
     it "can create a new user" do
