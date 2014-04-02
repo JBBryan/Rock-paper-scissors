@@ -2,6 +2,7 @@ module RPS
 
 	class Invitation
 		attr_reader :host_id, :guest_id, :id
+		attr_accessor :status
 		@@id = 0
 
 		def initialize(host_id, guest_id)

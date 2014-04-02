@@ -48,6 +48,14 @@ module RPS
         return @invites[invite_id]
       end
 
+      def accept_invite(invite_id, host_id, guest_id)
+        invite = RPS.db.get_invite(invite_id)
+        invite.status = "accepted"
+        match = RPS.db.add_match(host_id, guest_id)
+        game = RPS.db.add_game(match.id)
+        return invite
+      end
+
       def add_game(match_id)
         new_game = Game.new(match_id)
         @games[new_game.id] = new_game
