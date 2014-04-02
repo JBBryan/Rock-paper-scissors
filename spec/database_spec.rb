@@ -39,6 +39,13 @@ module RPS
       expect(@db.get_game(game_1.id)).to be_a(Game)
     end
 
+    it "can declare a game winner" do
+    end
+
+    it "can declare a match winner" do
+    end
+
+
   end
 end
 

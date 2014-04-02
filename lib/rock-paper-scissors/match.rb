@@ -1,7 +1,7 @@
 class RPS::Match
 
   attr_reader :player1, :player2, :id
-  attr_accessor :p1_win_counter, :p2_win_counter
+  attr_accessor :p1_win_counter, :p2_win_counter, :tie_counter
 
   @@match_id = 0
 
@@ -12,6 +12,7 @@ class RPS::Match
     @id = @@match_id
     @p1_win_counter = 0
     @p2_win_counter = 0
+    @tie_counter = 0
   end
 
 

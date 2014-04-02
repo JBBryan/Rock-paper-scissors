@@ -1,8 +1,17 @@
 module RPS
+  def self.db
+    @__db_instance ||= Database.new
+
+    if @__db_instance.nil?
+      @__db_instance = Database.new
+    end
+    return @__db_instance
+  end
+
   class Database
 
     attr_reader :users, :matches, :games, :invites
-    
+
     def initialize
       @users = {}
       @matches = {}
@@ -46,10 +55,6 @@ module RPS
 
       def get_game(game_id)
         return @games[game_id]
-      end
-
-      def self.db
-        @__db_instance ||= Database.new
       end
     end
   end
