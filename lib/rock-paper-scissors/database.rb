@@ -94,7 +94,6 @@ module RPS
           end #end if /else game logic
         end #end if game.p1_move && game.p2_move != nil
       end #end play
-
     end
   end
 end

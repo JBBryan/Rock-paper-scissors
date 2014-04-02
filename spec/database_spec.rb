@@ -14,11 +14,6 @@ module RPS
       @game = RPS.db.add_game(@match.id)
     end
 
-    it "can play a game" do
-      play1 = RPS.db.play(@match.id, "rock", @alex.id)
-      play2 = RPS.db.play(@match.id, "paper", @bob.id)
-      expect(@game.winner_id).to eq(@bob.id)
-    end
 
 
     it "can create a new user" do
@@ -53,9 +48,11 @@ module RPS
       expect(@db.get_game(game_1.id)).to be_a(Game)
     end
 
-
-
-
+    it "can play a game" do
+      play1 = RPS.db.play(@match.id, "rock", @alex.id)
+      play2 = RPS.db.play(@match.id, "paper", @bob.id)
+      expect(@game.winner_id).to eq(@bob.id)
+    end
   end
 end
 
