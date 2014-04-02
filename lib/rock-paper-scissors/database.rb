@@ -60,7 +60,6 @@ module RPS
       def play(match_id, move, user_id)
         match = RPS.db.get_match(match_id)
         games = RPS.db.games.values.select {|game| game.match_id == match_id}
-
         game = games.find{ |game| game.winner_id == nil }
 
         if user_id == match.player1_id
@@ -74,22 +73,22 @@ module RPS
             game.winner_id = 0
             match.tie_counter += 1
           elsif game.p1_move == "rock" && game.p2_move == "scissors"
-            game.winner_id = 1
+            game.winner_id = match.player1_id
             match.p1_win_counter += 1
           elsif game.p1_move == "rock" && game.p2_move == "paper"
-            game.winner_id = 2
+            game.winner_id = match.player2_id
             match.p2_win_counter += 1
           elsif game.p1_move == "paper" && game.p2_move == "scissors"
-            game.winner_id = 2
+            game.winner_id = match.player2_id
             match.p2_win_counter += 1
           elsif game.p1_move == "paper" && game.p2_move == "rock"
-            game.winner_id = 1
+            game.winner_id = match.player1_id
             match.p1_win_counter += 1
           elsif game.p1_move == "scissors" && game.p2_move == "paper"
-            game.winner_id = 1
+            game.winner_id = match.player1_id
             match.p1_win_counter += 1
           else
-            game.winner_id = 2
+            game.winner_id = match.player2_id
             match.p2_win_counter += 1
           end #end if /else game logic
         end #end if game.p1_move && game.p2_move != nil

@@ -9,6 +9,7 @@ module RPS
 			@guest_id = guest_id
 			@@id += 1
 			@id = @@id
+			@status = "pending"
 		end
 	end
 end
