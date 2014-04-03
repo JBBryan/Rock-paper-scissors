@@ -1,9 +1,12 @@
 module RPS
   class CreateInvitation < UseCase
   	def run(inputs)
+  		session_key = inputs[:session_key]
 	  	host_id = inputs[:host_id]
 	  	guest_id = inputs[:guest_id]
 	  	users = RPS.db.users.keys #returns the user IDs in an array
+	  	session = RPS.db.get_session(session_key)
+	  	host = RPS.db.get_user(session.user_id)
 
 	  	return failure(:no_host_id) if host_id != users.find {|user_id| user_id == host_id}
 	  	return failure(:no_guest_id) if guest_id != users.find {|user_id| user_id == guest_id}
@@ -12,14 +15,5 @@ module RPS
 
   		success :invite => invite
   	end
-
-
-
-    # def run(inputs)
-    #   name = inputs[:name]
-    #   return failure(:no_name_given) if name == ""
-    #   employee = TM.db.add_employee(inputs[:name])
-    #   success :employee => employee
-    # end
   end
 end
