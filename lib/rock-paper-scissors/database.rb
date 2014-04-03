@@ -74,6 +74,9 @@ module RPS
 
     def start_session(user_id)
       session = Session.new(user_id)
+      session_key = session.session_key
+      @sessions[session_key] = session
+      return session
     end
 
     def get_session(session_key)
@@ -147,7 +150,10 @@ module RPS
     end
 
     def sign_in(username, password)
-      session = RPS.start_session()
+      user = RPS.db.users.values.find {|user| user.username == username}
+      session = RPS.db.start_session(user.id)
+      return session
     end
+
   end # end class Database
 end # end module RPS
