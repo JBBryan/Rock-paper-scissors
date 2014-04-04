@@ -35,17 +35,19 @@ module RPS
     ###############################################
     ################## USERS ######################
     ###############################################
-    
-    def add_user(name)
-      user = User.new(name)
-      @users[user.id] = user
-      return user
-
-      # user = @sqlite.execute("INSERT INTO users (name) VALUES (?) ")
-    end
 
     def get_user(user_id)
-      return @users[user_id]
+      user = @sqlite.execute("SELECT * FROM users WHERE id = ?;", user_id)
+    end
+
+    def get_users
+      rows = @sqlite.execute("SELECT * FROM users;")
+
+      rows.map do |row|
+        user = User.new(row[1], row[2], row[3])
+        user.id = row[0]
+        user
+      end
     end
 
     ###############################################
@@ -170,16 +172,23 @@ module RPS
     ################# SIGN IN #####################
     ###############################################
 
+    # def add_user(name, username, password)
+    #   user = User.new(name)
+
+    #   user = @sqlite.execute("INSERT INTO users (name, username, password) VALUES (?, ?, ?);", name, username, password)
+    #   return user
+    # end
+
     def sign_up(name, username, password)
-      user = RPS.db.add_user(name)
-      user.username = username
-      user.password = password
+      user = User.new(name, username, password)
+      @sqlite.execute("INSERT INTO users(name, username, password) VALUES (?, ?, ?);", name, username, password)
+      user.id = @sqlite.execute("SELECT last_insert_rowid()")[0][0]
       return user
     end
 
     def sign_in(username, password)
-      user = RPS.db.users.values.find {|user| user.username == username}
-      session = RPS.db.start_session(user.id)
+      user = @sqlite.execute("SELECT * FROM users WHERE username = ?;", username)
+      session = RPS.db.start_session(user[0][0])
       return session
     end
 

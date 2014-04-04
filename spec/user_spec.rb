@@ -5,7 +5,7 @@ module RPS
   describe 'User' do
     before do
       RPS::User.class_variable_set :@@user_id, 10
-      @user = RPS::User.new('Brosiedon')
+      @user = RPS::User.new("Brosiedon", "numberonebro", "superchill")
     end
 
     it 'exist' do

@@ -14,13 +14,13 @@ module RPS
 			@new_invite = RPS.db.add_invitation(@gilbert_session.session_key, @gene_session.session_key)
 		end
 
-		it "allows the guest to accept the invitation" do
+		xit "allows the guest to accept the invitation" do
 			result = subject.run(:host_id => @gilbert.id, :guest_id => @gene.id, :invite_id => @new_invite.id)
 			expect(result.success?).to eq(true)
 			expect(result.invite.status).to eq("accepted")
 		end
 
-		it "errors when an argument is invalid" do
+		xit "errors when an argument is invalid" do
 			result = subject.run(:host_id => 80085, :guest_id => @gene.id, :invite_id => @new_invite.id)
 			expect(result.error).to eq(:no_host_id)
 			
