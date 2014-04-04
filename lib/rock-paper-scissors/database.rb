@@ -1,18 +1,30 @@
 module RPS
-  def self.db
-    @__db_instance ||= Database.new
+  # def self.db
+  #   @__db_instance ||= Database.new
 
-    if @__db_instance.nil?
-      @__db_instance = Database.new
-    end
-    return @__db_instance
+  #   if @__db_instance.nil?
+  #     @__db_instance = Database.new
+  #   end
+  #   return @__db_instance
+  # end
+
+  def self.db
+    @__db_instance ||= DB.new(@app_db_name)
   end
 
-  class Database
+  # This allows us to set our database name in both our
+  # spec_helper.rb and also our client code.
+  # You MUST set this before the **first time** you call your singleton getter.
+  def self.db_name=(db_name)
+    @app_db_name = db_name
+  end
 
-    attr_reader :users, :matches, :games, :invites
+  class DB
 
-    def initialize
+    attr_reader :users, :matches, :games, :invites, :sessions
+
+    def initialize(db_name)
+      @sqlite = SQLite3::Database.new(db_name)
       @users = {}
       @matches = {}
       @games = {}
@@ -28,6 +40,8 @@ module RPS
       user = User.new(name)
       @users[user.id] = user
       return user
+
+      # user = @sqlite.execute("INSERT INTO users (name) VALUES (?) ")
     end
 
     def get_user(user_id)
@@ -50,10 +64,16 @@ module RPS
     ###############################################
     ############### INVITATIONS ###################
     ###############################################
-    def add_invitation(host_id, guest_id)
+    def add_invitation(host_session_key, guest_id)
+      host_id = get_user_id_by_session(host_session_key)
+
       invite = Invitation.new(host_id, guest_id)
       @invites[invite.id] = invite
       return invite
+    end
+
+    def get_user_id_by_session(session_key)
+      @sessions[session_key].user_id
     end
 
     def get_invite(invite_id)
@@ -61,6 +81,7 @@ module RPS
     end
 
     def accept_invite(invite_id, host_id, guest_id)
+      
       invite = RPS.db.get_invite(invite_id)
       invite.status = "accepted"
       match = RPS.db.add_match(host_id, guest_id)
@@ -83,6 +104,12 @@ module RPS
       session = @sessions[session_key]
     end
 
+    
+    def get_user_by_session(session_key)
+      user_id = @sessions[session_key].user_id
+      get_user(user_id)
+    end
+
     ###############################################
     ################### GAME ######################
     ###############################################
@@ -100,11 +127,12 @@ module RPS
     ################## PLAY #######################
     ###############################################
 
-    def play(match_id, move, user_id)
+    def play(match_id, move, session_key)
       match = RPS.db.get_match(match_id)
       games = RPS.db.games.values.select {|game| game.match_id == match_id}
       game = games.find{ |game| game.winner_id == nil }
-
+      user_id = get_user_id_by_session(session_key)
+      
       if user_id == match.player1_id
         game.p1_move = move
       else
@@ -153,6 +181,14 @@ module RPS
       user = RPS.db.users.values.find {|user| user.username == username}
       session = RPS.db.start_session(user.id)
       return session
+    end
+
+    ##############################
+    ## SQL Database Interaction ##
+    ##############################
+
+    def clear_all_records
+      @sqlite.execute("DELETE FROM users")
     end
 
   end # end class Database

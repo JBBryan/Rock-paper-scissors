@@ -5,10 +5,13 @@ module RPS
 		before do
 			@db = RPS.db
 
-			@gilbert = RPS.db.add_user("Gilbert")
-			@gene = RPS.db.add_user("Gene")
+			@gilbert = RPS.db.sign_up("Gilbert", "superchill", "peanuts")
+			@gene = RPS.db.sign_up("Gene", "superchiller", "peanuts")
+			
+			@gilbert_session = RPS.db.sign_in("superchill", "peanuts")
+			@gene_session = RPS.db.sign_in("superchiller", "peanuts")
 
-			@new_invite = RPS.db.add_invitation(@gilbert.id, @gene.id)
+			@new_invite = RPS.db.add_invitation(@gilbert_session.session_key, @gene_session.session_key)
 		end
 
 		it "allows the guest to accept the invitation" do

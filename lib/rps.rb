@@ -1,3 +1,6 @@
+require 'sqlite3'
+require 'pry-debugger'
+
 module RPS
 end
 
@@ -12,4 +15,4 @@ require_relative 'rock-paper-scissors/use-cases/create_invitation.rb'
 require_relative 'rock-paper-scissors/use-cases/accept_invitation.rb'
 require_relative 'rock-paper-scissors/use-cases/sign_up.rb'
 require_relative 'rock-paper-scissors/use-cases/sign_in.rb'
-require 'pry-debugger'
+require_relative 'rock-paper-scissors/use-cases/play_move.rb'
